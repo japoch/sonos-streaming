@@ -26,6 +26,7 @@ To stream the sound from a vinyl record player to the Sonos speakers, you will n
 * 1x 8GB MicroSD card
 * 1x SD card reader/adapter (if your computer doesn't already support it)
 * 1x Behringer U-PHONE UFO202
+* 1x ART USB Phono Plus PS (optional)
 
 ## Overview software
 
