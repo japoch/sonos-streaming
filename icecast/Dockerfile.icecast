@@ -1,5 +1,5 @@
-# Use the focal Ubuntu image as the base
-FROM debian:bullseye
+# Use the debian image as the base
+FROM debian:bookworm
 
 # Install dependencies
 RUN apt-get update && apt-get upgrade -y
