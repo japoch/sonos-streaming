@@ -15,6 +15,23 @@ services:
       - no-internet
     restart: unless-stopped
 
+  liquidsoap:
+    image: liquidsoap
+    container_name: liquidsoap
+    build:
+      context: ./liquidsoap
+      dockerfile: Dockerfile
+    depends_on:
+      - icecast
+    devices:
+      - "/dev/snd:/dev/snd"
+    networks:
+      - no-internet
+    restart: unless-stopped
+    volumes:
+      - ./liquidsoap/streaming.liq:/streaming.liq:ro
+      - ./liquidsoap/asound.conf:/etc/asound.conf
+
   icecast:
     image: icecast
     container_name: icecast
