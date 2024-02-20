@@ -1,5 +1,28 @@
 # Bluetooth Receiver
 
+## Running in Raspberry PI 2
+
+```bash
+# fresh install Bluetooth
+# https://return2.net/fix-bluetooth-problems-on-raspberry-pi-running-raspbian/
+sudo apt-get purge -y bluez bluez-firmware pi-bluetooth && sudo apt-get install pi-bluetooth
+/usr/bin/bluetoothctl discoverable on
+/usr/bin/bluetoothctl show
+# installing BlueAlsa (working till Raspian 11 bullseye)
+sudo echo "deb http://archive.raspberrypi.org/debian/ buster main" | sudo tee /etc/apt/sources.list.d/raspi-buster.list
+sudo printf 'Package: *\nPin: release n=buster\nPin-Priority: 50\n' | sudo tee --append /etc/apt/preferences.d/limit-buster
+sudo apt-get update && apt-cache policy bluealsa
+sudo apt-get install -y --no-install-recommends bluealsa
+sudo systemctl start bluealsa
+```
+
+## Running in Docker
+
+```bash
+docker build -t bluetooth-receiver .
+docker run --rm -ti bluetooth-receiver
+```
+
 ## Running within WSL
 
 ### Requirements

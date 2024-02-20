@@ -11,7 +11,8 @@ service dbus start
 /usr/sbin/bluetoothd &
 #/usr/sbin/bluetoothd --nodetach --debug=DEBUG
 
-#/usr/bin/bluetoothctl discoverable on
+/usr/bin/bluetoothctl discoverable on
+
 # enable page and inquiry scan
 #/bin/hciconfig hci0 piscan
 # sets Simple Pairing mode
