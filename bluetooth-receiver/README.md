@@ -1,6 +1,8 @@
 # Bluetooth Receiver
 
-## Running in Raspberry PI 2
+## Running in Raspberry PI 2b Debian 11 "Bullseye"
+
+**!DEPRECATED!**
 
 ```bash
 # fresh install Bluetooth
@@ -15,6 +17,32 @@ sudo apt-get update && apt-cache policy bluealsa
 sudo apt-get install -y --no-install-recommends bluealsa
 sudo systemctl start bluealsa
 ```
+
+## Running on Raspberry PI 2B Debian 11 "Bullseye"
+
+Quellen:
+- [Wie Sie den Raspberry Pi als “Bluetooth-Adapter” nutzen](https://www.pcwelt.de/article/1397754/wie-sie-den-raspberry-pi-als-bluetooth-adapter-nutzen.html)
+- [Using a Raspberry Pi as a Bluetooth® speaker with PipeWire](https://github.com/fdanis-oss/pw_wp_bluetooth_rpi_speaker)
+
+```bash
+# Upgrade system
+sudo apt-get upgrade -y
+# Add backport repo and GPG keys
+echo "deb http://deb.debian.org/debian bullseye-backports main contrib non-free" | sudo tee /etc/apt/sources.list.d/bullseye-backports.list
+gpg --keyserver keyserver.ubuntu.com --recv-keys '0E98404D386FA1D9' '6ED0E7B82643E131'
+gpg --export '0E98404D386FA1D9' '6ED0E7B82643E131' | sudo apt-key --keyring /etc/apt/trusted.gpg.d/bullseye-backports.gpg add -
+sudo apt-get update
+# Install packages from backport repo
+sudo apt-get install -t bullseye-backports -y pipewire wireplumber libspa-0.2-bluetooth
+# Copy speaker agent files
+cp speaker-agent.py ~
+mkdir -p ~/.config/systemd/user/ && cp speaker-agent.service ~/.config/systemd/user/
+# set auto-reconnect in Bluetooth settings
+sudo sed -i 's/#JustWorksRepairing.*/JustWorksRepairing = always/' /etc/bluetooth/main.conf
+sudo systemctl restart bluetooth.service
+# start Systemd service in user context
+systemctl --user enable --now speaker-agent.service
+>>>>>>> Stashed changes
 
 ## Running in Docker
 
