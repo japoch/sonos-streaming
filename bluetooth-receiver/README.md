@@ -36,6 +36,8 @@ sudo apt-get update
 sudo apt-get install -t bullseye-backports -y pipewire wireplumber libspa-0.2-bluetooth
 # Install DBus Python support
 sudo apt-get install -y python3-dbus
+# add user to use ALSA
+sudo usermod -G audio sonos
 # Copy speaker agent files
 cp speaker-agent.py ~
 mkdir -p ~/.config/systemd/user/ && cp speaker-agent.service ~/.config/systemd/user/
