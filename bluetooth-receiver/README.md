@@ -1,6 +1,6 @@
 # Bluetooth Receiver
 
-## Running in Raspberry PI 2b Debian 11 "Bullseye"
+## Running on Raspberry PI 2b Debian 11 "Bullseye"
 
 **!DEPRECATED!**
 
@@ -34,6 +34,8 @@ gpg --export '0E98404D386FA1D9' '6ED0E7B82643E131' | sudo apt-key --keyring /etc
 sudo apt-get update
 # Install packages from backport repo
 sudo apt-get install -t bullseye-backports -y pipewire wireplumber libspa-0.2-bluetooth
+# Install DBus Python support
+sudo apt-get install -y python3-dbus
 # Copy speaker agent files
 cp speaker-agent.py ~
 mkdir -p ~/.config/systemd/user/ && cp speaker-agent.service ~/.config/systemd/user/
@@ -42,7 +44,7 @@ sudo sed -i 's/#JustWorksRepairing.*/JustWorksRepairing = always/' /etc/bluetoot
 sudo systemctl restart bluetooth.service
 # start Systemd service in user context
 systemctl --user enable --now speaker-agent.service
->>>>>>> Stashed changes
+```
 
 ## Running in Docker
 
