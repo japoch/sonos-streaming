@@ -5,8 +5,10 @@ After=multi-user.target
 
 [Service]
 Type=simple
+WorkingDirectory=/home/localadm/ws/gh-sonos-streaming/bluetooth-receiver
 Environment=PYTHONUNBUFFERED=1
-ExecStart=/usr/bin/python /home/sonos/ws/gh-sonos-streaming/bluetooth-receiver/speaker-agent.py
+ExecStart=/usr/bin/python speaker-agent.py
+User=localadm
 
 [Install]
 WantedBy=multi-user.target
