@@ -18,11 +18,24 @@ sudo apt-get install -y --no-install-recommends bluealsa
 sudo systemctl start bluealsa
 ```
 
-## Running on Raspberry PI 2B Debian 11 "Bullseye"
+## Running on Raspberry PI 2B Debian 11 "Bullseye" with PipeWire and WirePlumber
 
-Quellen:
-- [Wie Sie den Raspberry Pi als “Bluetooth-Adapter” nutzen](https://www.pcwelt.de/article/1397754/wie-sie-den-raspberry-pi-als-bluetooth-adapter-nutzen.html)
-- [Using a Raspberry Pi as a Bluetooth® speaker with PipeWire](https://github.com/fdanis-oss/pw_wp_bluetooth_rpi_speaker)
+PipeWire is able to output sound to the internal audio chipset without any special configuration. It provides Bluetooth® A2DP support with optional codecs (SBC-XQ, LDAC, aptX, aptX HD, aptX-LL, FastStream) out of the box.
+
+At the same time, WirePlumber automatically creates the connection between the A2DP source and the audio chipset when a remote device, like a phone or a laptop, connects. This makes the configuration very easy, as PipeWire will work out of the box. We will only need to set up BlueZ to make the system headless.
+
+Client > Bluetooth > WirePlumber > PipeWire > ALSA > Kernel
+
+### Sources
+
+- [PC-Welt - Wie Sie den Raspberry Pi als “Bluetooth-Adapter” nutzen](https://www.pcwelt.de/article/1397754/wie-sie-den-raspberry-pi-als-bluetooth-adapter-nutzen.html)
+- [Collabora - Using a Raspberry Pi as a Bluetooth speaker with PipeWire](https://www.collabora.com/news-and-blog/blog/2022/09/02/using-a-raspberry-pi-as-a-bluetooth-speaker-with-pipewire-wireplumber/)
+- [Github - Using a Raspberry Pi as a Bluetooth® speaker with PipeWire](https://github.com/fdanis-oss/pw_wp_bluetooth_rpi_speaker)
+- [Sound configuration on Raspberry Pi with ALSA](http://blog.scphillips.com/posts/2013/01/sound-configuration-on-raspberry-pi-with-alsa/)
+- [PipeWire](https://docs.pipewire.org/)
+- [WirePlumber](https://pipewire.pages.freedesktop.org/wireplumber/)
+
+### Get it running
 
 ```bash
 # Upgrade system
@@ -44,9 +57,30 @@ mkdir -p ~/.config/systemd/user/ && cp speaker-agent.service ~/.config/systemd/u
 # set auto-reconnect in Bluetooth settings
 sudo sed -i 's/#JustWorksRepairing.*/JustWorksRepairing = always/' /etc/bluetooth/main.conf
 sudo systemctl restart bluetooth.service
+
 # start Systemd service in user context
-systemctl --user enable --now speaker-agent.service
+systemctl --user --now enable speaker-agent.service
 ```
+
+### Debugging ALSA and DBus
+
+- Set outbbut device with `sudo rasp-config`
+- List ALSA playback hardware devices: `aplay -l` or `cat /proc/asound/cards`
+- List all ALSA cards and devices: `aplay -L`
+- Unmute and adjust ALSA output channel for default device: `amixer set PCM unmute` and `amixer set PCM 90%`
+  or with `amixer controls`, `amixer cget numid=2` and `amixer cset numid=1 90%`
+  or visual with with `alsamixer`
+- Store the ALSA state to `/var/lib/alsa/asound.state`: `sudo alsactl store`
+  this runs with `/etc/init.d/alsa-utils` on halt (runlevel 0, /etc/rc0.d/K01alsa-utils) and reboot (runlevel 6, /etc/rc6.d/K01alsa-utils)
+- Generates stereo pink noise on default device: `speaker-test -c 2`
+- Download and play wave file on default device: `wget http://www.pacdv.com/sounds/people_sound_effects/applause-1.wav` and `aplay applause-1.wav`
+- Monitor system message bus `dbus-monitor --system --profile`
+
+- Show Bluetooth config: `bluetoothctl show`
+
+- Show WirePlumber config: `wpctl status`
+- Show WirePlumber user context service: `systemctl --user status wireplumber.service`
+- Show PipeWire user context service: `systemctl --user status pipewire.service`
 
 ## Running in Docker
 
