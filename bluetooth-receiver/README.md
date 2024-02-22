@@ -1,8 +1,17 @@
 # Bluetooth Receiver
 
-## Running on Raspberry PI 2b Debian 11 "Bullseye"
+## Running on Raspberry PI 2B Debian 11 "Bullseye"
 
 **!DEPRECATED!**
+
+### Sources
+
+- [Github - Raspberry Pi Audio Receiver](https://github.com/nicokaiser/rpi-audio-receiver)
+- [Stackoverflow - Accessing Bluetooth dongle from inside Docker?](https://stackoverflow.com/questions/28868393/accessing-bluetooth-dongle-from-inside-docker)
+- [Github - Bluetooth audio on a headless Raspberry Pi using BlueAlsa](https://introt.github.io/docs/raspberrypi/bluealsa.html)
+- [Sigmdel - Bluetooth®, PulseAudio, and BlueALSA in Raspberry Pi OS Lite (March 2022)](https://www.sigmdel.ca/michel/ha/rpi/bluetooth_in_rpios_02_en.html#bluealsa3)
+
+### Get it running
 
 ```bash
 # fresh install Bluetooth
@@ -34,6 +43,8 @@ Client > Bluetooth > WirePlumber > PipeWire > ALSA > Kernel
 - [Sound configuration on Raspberry Pi with ALSA](http://blog.scphillips.com/posts/2013/01/sound-configuration-on-raspberry-pi-with-alsa/)
 - [PipeWire](https://docs.pipewire.org/)
 - [WirePlumber](https://pipewire.pages.freedesktop.org/wireplumber/)
+- [Archlinux - WirePlumber](https://wiki.archlinux.org/title/WirePlumber#Keep_Bluetooth_running_after_logout_/_Headless_Bluetooth)
+- [Archlinux - ALSA](https://wiki.archlinux.org/title/Advanced_Linux_Sound_Architecture)
 
 ### Get it running
 
@@ -60,6 +71,11 @@ sudo systemctl restart bluetooth.service
 
 # start Systemd service in user context
 systemctl --user --now enable speaker-agent.service
+
+# or start Systemd service as system service
+sudo cp artifacts/speaker-agent.service /etc/systemd/system/
+sudo systemctl daemon-reload
+sudo systemctl --now enable speaker-agent.service
 ```
 
 ### Debugging ALSA and DBus
@@ -81,12 +97,14 @@ systemctl --user --now enable speaker-agent.service
 - Show WirePlumber config: `wpctl status`
 - Show WirePlumber user context service: `systemctl --user status wireplumber.service`
 - Show PipeWire user context service: `systemctl --user status pipewire.service`
+- Show PipeWire data streams: `pw-top`
+- Show WirePlumber config: `wpctl status`
 
 ## Running in Docker
 
 ```bash
 docker build -t bluetooth-receiver .
-docker run --rm -ti bluetooth-receiver
+docker run --rm -ti --net=host --privileged bluetooth-receiver
 ```
 
 ## Running within WSL
