@@ -29,6 +29,8 @@ sudo systemctl start bluealsa
 
 ## Running on Raspberry PI 2B Debian 11 "Bullseye" with PipeWire and WirePlumber
 
+Operating system Raspberry Pi OS (Legacy) Lite, System: 32-bit, Kernel version: 6.1, Debian version: 11 (bullseye).
+
 PipeWire is able to output sound to the internal audio chipset without any special configuration. It provides Bluetooth® A2DP support with optional codecs (SBC-XQ, LDAC, aptX, aptX HD, aptX-LL, FastStream) out of the box.
 
 At the same time, WirePlumber automatically creates the connection between the A2DP source and the audio chipset when a remote device, like a phone or a laptop, connects. This makes the configuration very easy, as PipeWire will work out of the box. We will only need to set up BlueZ to make the system headless.
@@ -45,6 +47,7 @@ Client > Bluetooth > WirePlumber > PipeWire > ALSA > Kernel
 - [WirePlumber](https://pipewire.pages.freedesktop.org/wireplumber/)
 - [Archlinux - WirePlumber](https://wiki.archlinux.org/title/WirePlumber#Keep_Bluetooth_running_after_logout_/_Headless_Bluetooth)
 - [Archlinux - ALSA](https://wiki.archlinux.org/title/Advanced_Linux_Sound_Architecture)
+- [Gitlab - Pipewire as system service with PA tunnel needs clear documentation](https://gitlab.freedesktop.org/pipewire/pipewire/-/issues/2196)
 
 ### Get it running
 
@@ -69,10 +72,14 @@ mkdir -p ~/.config/systemd/user/ && cp speaker-agent.service ~/.config/systemd/u
 sudo sed -i 's/#JustWorksRepairing.*/JustWorksRepairing = always/' /etc/bluetooth/main.conf
 sudo systemctl restart bluetooth.service
 
-# start Systemd service in user context
+# run Speaker-Agent as user context service
+# ISSUE: Login needed.
 systemctl --user --now enable speaker-agent.service
 
-# or start Systemd service as system service
+# or run Speaker-Agent as system service
+# ISSUE: Initial login needed, logout possible though.
+sudo sed -i 's/ \["with-logind"\] = true/ ["with-logind"] = false/' /usr/share/wireplumber/bluetooth.lua.d/50-bluez-config.lua
+loginctl enable-linger
 sudo cp artifacts/speaker-agent.service /etc/systemd/system/
 sudo systemctl daemon-reload
 sudo systemctl --now enable speaker-agent.service
@@ -94,11 +101,10 @@ sudo systemctl --now enable speaker-agent.service
 
 - Show Bluetooth config: `bluetoothctl show`
 
-- Show WirePlumber config: `wpctl status`
 - Show WirePlumber user context service: `systemctl --user status wireplumber.service`
 - Show PipeWire user context service: `systemctl --user status pipewire.service`
-- Show PipeWire data streams: `pw-top`
 - Show WirePlumber config: `wpctl status`
+- Show PipeWire data streams: `pw-top`
 
 ## Running in Docker
 
