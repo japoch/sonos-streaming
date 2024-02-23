@@ -105,6 +105,8 @@ sudo systemctl --now enable speaker-agent.service
 - Show PipeWire user context service: `systemctl --user status pipewire.service`
 - Show WirePlumber config: `wpctl status`
 - Show PipeWire data streams: `pw-top`
+- Show PipeWire daemon state: `pw-mon`
+- Show PipeWire server info: `pw-cli info 0`
 
 ## Running in Docker
 
@@ -114,6 +116,11 @@ docker run --rm -ti --net=host --privileged bluetooth-receiver
 ```
 
 ## Running within WSL
+
+### Sources
+
+- [Stackoverflow - bluetooth in docker for windows host](https://stackoverflow.com/questions/65795071/bluetooth-in-docker-for-windows-host)
+- [Github - How to make a USB bluetooth adapter work with WSL](https://github.com/dorssel/usbipd-win/discussions/310)
 
 ### Requirements
 
@@ -225,8 +232,6 @@ docker.exe run --privileged --rm -ti bluetooth-receiver
 ./entrypoint.sh
 ```
 
-## Howtos
+## Notes
 
-- [Stackoverflow - bluetooth in docker for windows host](https://stackoverflow.com/questions/65795071/bluetooth-in-docker-for-windows-host)
-- [Github - How to make a USB bluetooth adapter work with WSL](https://github.com/dorssel/usbipd-win/discussions/310)
 - [Pairing Agents in BlueZ stack](https://technotes.kynetics.com/2018/pairing_agents_bluez/)
