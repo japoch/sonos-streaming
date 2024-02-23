@@ -63,14 +63,15 @@ sudo apt-get update
 sudo apt-get install -t bullseye-backports -y pipewire wireplumber libspa-0.2-bluetooth
 # Install DBus Python support
 sudo apt-get install -y python3-dbus
-# add user to use ALSA
+# add group to user to use ALSA
 sudo usermod -G audio sonos
-# Copy speaker agent files
-cp speaker-agent.py ~
-mkdir -p ~/.config/systemd/user/ && cp speaker-agent.service ~/.config/systemd/user/
 # set auto-reconnect in Bluetooth settings
 sudo sed -i 's/#JustWorksRepairing.*/JustWorksRepairing = always/' /etc/bluetooth/main.conf
 sudo systemctl restart bluetooth.service
+
+# Configure Speaker-Agent service
+cp speaker-agent.py ~
+mkdir -p ~/.config/systemd/user/ && cp speaker-agent.service ~/.config/systemd/user/
 
 # run Speaker-Agent as user context service
 # ISSUE: Login needed.

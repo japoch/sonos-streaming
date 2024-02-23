@@ -5,9 +5,11 @@
 #done
 
 # startup 01_envs.sh
+#export PIPEWIRE_RUNTIME_DIR=/tmp
+#export PIPEWIRE_DEBUG=3
+
 #export DISABLE_RTKIT=y
 #export XDG_RUNTIME_DIR=/tmp
-export PIPEWIRE_RUNTIME_DIR=/tmp
 #export PULSE_RUNTIME_DIR=/tmp
 #export DISPLAY=:0.0
 
@@ -21,5 +23,6 @@ dbus-daemon --system --fork
 # startup/30_pipewire.sh
 mkdir -p /dev/snd
 pipewire &
+wireplumber &
 #pipewire-media-session &
 #pipewire-pulse &
