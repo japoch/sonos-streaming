@@ -43,6 +43,8 @@ URL: [http://www.darkice.org](http://www.darkice.org)
 Icecast is a streaming media server which we will use to stream the live audio from Darkice and 
 broadcast it out in our local network. This is what the Sonos speakers will pick up and play.
 
+The Icecast2 web GUI is avalable at http://HOSTNAME:8000/ with username 'admin' and password 'hackme'.
+
 URL: [https://icecast.org](https://icecast.org)
 
 
@@ -162,8 +164,8 @@ Click on the three dots in the top right corner, then on `Add a new radio statio
 
 Fill in the following in the prompt:
 
-* Streaming-URL: http://raspberrypi.local:8000/rapi.mp3
-* Station name: Vinyl
+* Streaming-URL: http://kodi-3.fritz.box:8000/phono.mp3
+* Station name: Phono
 
 ![installer_20](./images/installer_20.png)
 
